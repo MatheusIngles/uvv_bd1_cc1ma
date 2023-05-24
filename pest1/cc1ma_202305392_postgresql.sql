@@ -31,13 +31,13 @@ CREATE DATABASE uvv
        ALLOW_CONNECTIONS = true
 ;
 
--- Conectando no banco de dados "uvv" --
-
-\c -reuse-previous=on uvv; 
-
 -- Conectando ao meu usuario -- 	
 
 SET role matheus;
+
+-- Conectando no banco de dados "uvv" --
+
+\c "host=localhost dbname=uvv user=matheus password=cade@osilksong"
 
 -- Criando o esquema (SCHEMA), conforme solicitado pelo professor na parte 3.4.4 do PSET. --
 
@@ -320,11 +320,21 @@ ADD CONSTRAINT quantidade_check
 CHECK (quantidade >= 0)
 ;
 
+-- Alterando os as tabelas para o criador seja meu usuario --
+
+ALTER TABLE clientes 	 OWNER TO matheus;
+ALTER TABLE produtos 	 OWNER TO matheus;
+ALTER TABLE lojas    	 OWNER TO matheus;
+ALTER TABLE envios    	 OWNER TO matheus;
+ALTER TABLE pedidos  	 OWNER TO matheus;
+ALTER TABLE pedido_itens OWNER TO matheus;
+ALTER TABLE estoque      OWNER TO matheus;
+
 -- Alterando o atributo "client_id" da tabela "pedidos" para que seja uma chave estrangeira (FK) da chave primária (PK) "client_id" da tabela "clientes". --
  
 ALTER TABLE pedidos 
 ADD CONSTRAINT clientes_pedidos_fk
-FOREIGN KEY (client_id)
+FOREIGN KEY (client_id)produtos
 REFERENCES clientes (client_id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
