@@ -5,11 +5,13 @@
 
 -- Deletando o Banco de dados uvv se ele existir --
 
-DROP DATABASE IF EXISTS uvv;
+DROP DATABASE IF EXISTS uvv
+;
 
 -- Feito para deletar o meu usuario caso ele ja exista --
 
-DROP USER IF EXISTS matheus;
+DROP USER IF EXISTS matheus
+;
 
 -- Criando o usuário com o meu nome, conforme solicitado pelo professor no exercício 3.4.2 do PSET. --
 
@@ -38,6 +40,12 @@ SET role matheus;
 -- Conectando no banco de dados "uvv" --
 
 \c "host=localhost dbname=uvv user=matheus password=cade@osilksong"
+;
+
+-- Deletando o esquema (SCHEMA) caso ele já exista --
+
+DROP SCHEMA IF EXISTS lojas
+;
 
 -- Criando o esquema (SCHEMA), conforme solicitado pelo professor na parte 3.4.4 do PSET. --
 
@@ -45,10 +53,15 @@ CREATE SCHEMA lojas
 AUTHORIZATION matheus
 ;
 
--- Alterando o SEARCH_PATH padrão do Postgres para incluir o esquema "lojas" na frente em prioridade de "user" e "public", conforme solicitado pelo professor na parte 3.4.5 do PSET. --
+-- Alterando o SEARCH_PATH temporariamente para criacao das tabelas --
+
+SET SEARCH_PATH TO lojas, "$user", public;
+
+-- Alterando o SEARCH_PATH padrão do Postgres para o usuario matheus assim incluindo o esquema "lojas" na frente em prioridade de "user" e "public", conforme solicitado pelo professor na parte 3.4.5 do PSET. --
 
 ALTER USER matheus
-SET SEARCH_PATH TO lojas, "$user", public;
+SET SEARCH_PATH TO lojas, "$user", public
+;
 
 -- Criando a tabela "clientes" --
 
@@ -285,12 +298,12 @@ IS 'A chave primaria da tabela envios que representa o id dos envios.';
 
 -- Criando uma verificação que garante que o "preco_unitario" não seja menor que zero. --
 
-ALTER TABLE pedidos 
+ALTER TABLE pedido_itens 
 ADD CONSTRAINT preco_itens_check 
 CHECK (preco_unitario > 0)
 ;
 
--- Criando a tabela "estoque". --
+-- Criando a tabela "estoques". --
 
 CREATE TABLE estoques (
                 estoque_id 	NUMERIC(38) NOT NULL,
@@ -315,7 +328,7 @@ IS 'Representa a quantidade de determinado produto no estoque.';
 
 -- Criando a constante de verificação que impede que a quantidade de itens seja menor que zero. --
 
-ALTER TABLE estoque  
+ALTER TABLE estoques  
 ADD CONSTRAINT quantidade_check 
 CHECK (quantidade >= 0)
 ;
@@ -328,13 +341,13 @@ ALTER TABLE lojas    	 OWNER TO matheus;
 ALTER TABLE envios    	 OWNER TO matheus;
 ALTER TABLE pedidos  	 OWNER TO matheus;
 ALTER TABLE pedido_itens OWNER TO matheus;
-ALTER TABLE estoque      OWNER TO matheus;
+ALTER TABLE estoques     OWNER TO matheus;
 
 -- Alterando o atributo "client_id" da tabela "pedidos" para que seja uma chave estrangeira (FK) da chave primária (PK) "client_id" da tabela "clientes". --
  
 ALTER TABLE pedidos 
 ADD CONSTRAINT clientes_pedidos_fk
-FOREIGN KEY (client_id)produtos
+FOREIGN KEY (client_id)
 REFERENCES clientes (client_id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
@@ -420,4 +433,7 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
 
-
+-- Fim :D -- 
+-- Foi divertido fazer o PSET ( • ͜ʖ • ) --
+-- Creditos: Matheus Endlich Silveira --
+-- Matricula: 202305392 --
