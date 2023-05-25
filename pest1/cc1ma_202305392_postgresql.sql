@@ -63,81 +63,6 @@ ALTER USER matheus
 SET SEARCH_PATH TO lojas, "$user", public
 ;
 
--- Criando a tabela "clientes" --
-
-CREATE TABLE clientes (
-                client_id NUMERIC(38) 	NOT NULL,
-                email     VARCHAR(255) 	NOT NULL,
-                nome      VARCHAR(255) 	NOT NULL,
-                telefone1 VARCHAR(20)		,
-                telefone2 VARCHAR(20)		,	
-                telefone3 VARCHAR(20)		,
-                CONSTRAINT clientes_pk PRIMARY KEY (client_id)
-);
-
--- Comentando nos atributos e na tabela "clientes" --
-
-COMMENT ON TABLE clientes 
-IS 'Tabela que representa os clientes e suas informações.';
-COMMENT ON COLUMN clientes.client_id
-IS 'Chave principal da tabela cliente que representa o id dos clientes.';
-COMMENT ON COLUMN clientes.email     
-IS 'Representa o email dos clientes.';
-COMMENT ON COLUMN clientes.nome
-IS 'Representa o nome do cliente.';
-COMMENT ON COLUMN clientes.telefone1 
-IS 'Representa o 1º telefone dos clientes.';
-COMMENT ON COLUMN clientes.telefone2 
-IS 'Representa o 2º Telefone dos clientes.';
-COMMENT ON COLUMN clientes.telefone3 
-IS 'Representa o 3º telefone do cliente.';
-
--- Criando a tabela produtos --
-
-CREATE TABLE produtos (
-                produto_id       NUMERIC(38)	NOT NULL,
-                nome 		 VARCHAR(255) 	NOT NULL,
-                preco_unitario 	 NUMERIC(10,2)		,
-                detalhes         BYTEA			,
-                imagem 		 BYTEA			,
-                imagem_mime_type VARCHAR(512)		,
-                imagem_arquivo 	 VARCHAR(512)		,
-                imagem_charset 	 VARCHAR(512)		,
-                imagem_ultima_atualizacao DATE,
-                CONSTRAINT produto_pk PRIMARY KEY (produto_id)
-);
-
--- Comentando nos atributos e na tabela "produtos" --
-
-COMMENT ON TABLE produtos 	           	     
-IS 'Tabela que representa os produtos que serão vedidos nas lojas.';
-COMMENT ON COLUMN produtos.produto_id               
-IS 'Chave Primaria da tabela produtos que representa os ids dos produtos.';
-COMMENT ON COLUMN produtos.nome                     
-IS 'É o atributo da tabela que representa o nome dos produtos.';
-COMMENT ON COLUMN produtos.preco_unitario            
-IS 'Atributo que representa o preço dos produtos.';
-COMMENT ON COLUMN produtos.detalhes 	             
-IS 'Atributo que representa os detalhes de cada produto na tabela produtos.';
-COMMENT ON COLUMN produtos.imagem                    
-IS 'Atributo constituinte de imagens dos produtos.';
-COMMENT ON COLUMN produtos.imagem_mime_type          
-IS 'Atributo que representa o tipo de arquivo que sera usado como imagem do produto na tabela.';
-COMMENT ON COLUMN produtos.imagem_arquivo            
-IS 'É o atributo que representa o caminho até a imagem dos produto.';
-COMMENT ON COLUMN produtos.imagem_charset            
-IS 'É o atributo constituinte dos conjuntos de caracteres que representam a imagem do produto.';
-COMMENT ON COLUMN produtos.imagem_ultima_atualizacao 
-IS 'Representa a data da ultima atualização na imagem do produto.';
-
-
--- Criando uma checagem que não permite que o preço dos produtos seja negativo, assim evitando possiveis erros na incersao de valores --
-
-ALTER TABLE produtos 
-ADD CONSTRAINT preco_check 
-CHECK (preco_unitario > 0)
-;
-
 -- Criando a tabela "lojas" --
 
 CREATE TABLE lojas (
@@ -188,6 +113,153 @@ ALTER TABLE lojas
 ADD CONSTRAINT endereco_check 
 CHECK ((endereco_web IS NULL OR endereco_fisico IS NOT NULL) OR
        (endereco_web IS NOT NULL OR endereco_fisico IS NULL)
+)
+;
+
+-- Criando a verificação para não permitir que a latitude ultrapasse 90 graus e que ela seja negativa.--
+
+ALTER TABLE lojas
+ADD CONSTRAINT latitude_check
+CHECK (latitude >= -90 AND
+       latitude <= 90
+)
+;
+
+-- Criando a verificação para não permitir que a longitude ultrapasse 180 graus e que ela não seja menor que -180 .--
+
+ALTER TABLE lojas
+ADD CONSTRAINT longitude_check
+CHECK (longitude >= -180 AND
+       longitude <= 180
+)
+;
+
+-- Criando a verificação que permite apenas que o atributo "logo_ultima_atualizacao" seja uma data passada ou a data atual, nunca uma data que ainda não ocorreu. --
+
+ALTER TABLE lojas
+ADD CONSTRAINT data_hora_lojas_check
+CHECK (logo_ultima_atualizacao <= current_timestamp)
+;
+
+-- Criando a tabela produtos --
+
+CREATE TABLE produtos (
+                produto_id       NUMERIC(38)	NOT NULL,
+                nome 		 VARCHAR(255) 	NOT NULL,
+                preco_unitario 	 NUMERIC(10,2)		,
+                detalhes         BYTEA			,
+                imagem 		 BYTEA			,
+                imagem_mime_type VARCHAR(512)		,
+                imagem_arquivo 	 VARCHAR(512)		,
+                imagem_charset 	 VARCHAR(512)		,
+                imagem_ultima_atualizacao DATE,
+                CONSTRAINT produto_pk PRIMARY KEY (produto_id)
+);
+
+-- Comentando nos atributos e na tabela "produtos" --
+
+COMMENT ON TABLE produtos 	           	     
+IS 'Tabela que representa os produtos que serão vedidos nas lojas.';
+COMMENT ON COLUMN produtos.produto_id               
+IS 'Chave Primaria da tabela produtos que representa os ids dos produtos.';
+COMMENT ON COLUMN produtos.nome                     
+IS 'É o atributo da tabela que representa o nome dos produtos.';
+COMMENT ON COLUMN produtos.preco_unitario            
+IS 'Atributo que representa o preço dos produtos.';
+COMMENT ON COLUMN produtos.detalhes 	             
+IS 'Atributo que representa os detalhes de cada produto na tabela produtos.';
+COMMENT ON COLUMN produtos.imagem                    
+IS 'Atributo constituinte de imagens dos produtos.';
+COMMENT ON COLUMN produtos.imagem_mime_type          
+IS 'Atributo que representa o tipo de arquivo que sera usado como imagem do produto na tabela.';
+COMMENT ON COLUMN produtos.imagem_arquivo            
+IS 'É o atributo que representa o caminho até a imagem dos produto.';
+COMMENT ON COLUMN produtos.imagem_charset            
+IS 'É o atributo constituinte dos conjuntos de caracteres que representam a imagem do produto.';
+COMMENT ON COLUMN produtos.imagem_ultima_atualizacao 
+IS 'Representa a data da ultima atualização na imagem do produto.';
+
+
+-- Criando uma checagem que não permite que o preço dos produtos seja negativo, assim evitando possiveis erros na incersao de valores --
+
+ALTER TABLE produtos 
+ADD CONSTRAINT preco_check 
+CHECK (preco_unitario > 0)
+;
+
+-- Criando a verificação que permite apenas que o atributo "imagem_ultima_atualizacao" seja uma data passada ou a data atual, nunca uma data que ainda não ocorreu. --
+
+ALTER TABLE produtos
+ADD CONSTRAINT data_hora_produtos_check
+CHECK (imagem_ultima_atualizacao <= current_timestamp)
+;
+
+-- Criando a tabela "estoques". --
+
+CREATE TABLE estoques (
+                estoque_id 	NUMERIC(38) NOT NULL,
+                loja_id 	NUMERIC(38) NOT NULL,
+                produto_id 	NUMERIC(38) NOT NULL,
+                quantidade 	NUMERIC(38) NOT NULL,
+                CONSTRAINT estoque_pk PRIMARY KEY (estoque_id)
+);
+
+-- Comentando sobre os atributos e a tabela "estoque". --
+
+COMMENT ON TABLE estoques 		
+IS 'Tabela que representa o estoque e recebe como fk: loja_id e produto_id';
+COMMENT ON COLUMN estoques.estoque_id 	
+IS 'É Chave Principal da tabela e representa o id';
+COMMENT ON COLUMN estoques.loja_id 	
+IS 'Chave primaria da tabela loja, representando o id das lojas.';
+COMMENT ON COLUMN estoques.produto_id 	
+IS 'Chave Primaria da tabela produtos que representa os ids dos produtos.';
+COMMENT ON COLUMN estoques.quantidade 	
+IS 'Representa a quantidade de determinado produto no estoque.';
+
+-- Criando a constante de verificação que impede que a quantidade de itens seja menor que zero. --
+
+ALTER TABLE estoques  
+ADD CONSTRAINT quantidade_check 
+CHECK (quantidade >= 0)
+;
+
+-- Criando a tabela "clientes" --
+
+CREATE TABLE clientes (
+                client_id NUMERIC(38) 	NOT NULL,
+                email     VARCHAR(255) 	NOT NULL,
+                nome      VARCHAR(255) 	NOT NULL,
+                telefone1 VARCHAR(20)		,
+                telefone2 VARCHAR(20)		,	
+                telefone3 VARCHAR(20)		,
+                CONSTRAINT clientes_pk PRIMARY KEY (client_id)
+);
+
+-- Comentando nos atributos e na tabela "clientes" --
+
+COMMENT ON TABLE clientes 
+IS 'Tabela que representa os clientes e suas informações.';
+COMMENT ON COLUMN clientes.client_id
+IS 'Chave principal da tabela cliente que representa o id dos clientes.';
+COMMENT ON COLUMN clientes.email     
+IS 'Representa o email dos clientes.';
+COMMENT ON COLUMN clientes.nome
+IS 'Representa o nome do cliente.';
+COMMENT ON COLUMN clientes.telefone1 
+IS 'Representa o 1º telefone dos clientes.';
+COMMENT ON COLUMN clientes.telefone2 
+IS 'Representa o 2º Telefone dos clientes.';
+COMMENT ON COLUMN clientes.telefone3 
+IS 'Representa o 3º telefone do cliente.';
+
+-- Criando a validação de email, verificando a presença do símbolo '@' antes de considerá-lo válido. --
+
+ALTER TABLE clientes
+ADD CONSTRAINT email_check
+CHECK (email LIKE '%@%' AND 
+       email LIKE '%.%' AND	
+       email NOT LIKE '%@%@%'
 )
 ;
 
@@ -267,6 +339,13 @@ CHECK  (status = 'CANCELADO'    OR
 )
 ;
 
+-- Criando a verificação que garante que a hora do pedido só pode ser a hora atual ou uma hora aproximada no futuro, assim inibindo a inserção de uma hora passada. --
+
+ALTER TABLE pedidos
+ADD CONSTRAINT data_hora_check
+CHECK (data_hora >= current_timestamp)
+;
+
 -- Criando a tabela "pedido_itens". --
 
 CREATE TABLE pedido_itens (
@@ -301,36 +380,6 @@ IS 'A chave primaria da tabela envios que representa o id dos envios.';
 ALTER TABLE pedido_itens 
 ADD CONSTRAINT preco_itens_check 
 CHECK (preco_unitario > 0)
-;
-
--- Criando a tabela "estoques". --
-
-CREATE TABLE estoques (
-                estoque_id 	NUMERIC(38) NOT NULL,
-                loja_id 	NUMERIC(38) NOT NULL,
-                produto_id 	NUMERIC(38) NOT NULL,
-                quantidade 	NUMERIC(38) NOT NULL,
-                CONSTRAINT estoque_pk PRIMARY KEY (estoque_id)
-);
-
--- Comentando sobre os atributos e a tabela "estoque". --
-
-COMMENT ON TABLE estoques 		
-IS 'Tabela que representa o estoque e recebe como fk: loja_id e produto_id';
-COMMENT ON COLUMN estoques.estoque_id 	
-IS 'É Chave Principal da tabela e representa o id';
-COMMENT ON COLUMN estoques.loja_id 	
-IS 'Chave primaria da tabela loja, representando o id das lojas.';
-COMMENT ON COLUMN estoques.produto_id 	
-IS 'Chave Primaria da tabela produtos que representa os ids dos produtos.';
-COMMENT ON COLUMN estoques.quantidade 	
-IS 'Representa a quantidade de determinado produto no estoque.';
-
--- Criando a constante de verificação que impede que a quantidade de itens seja menor que zero. --
-
-ALTER TABLE estoques  
-ADD CONSTRAINT quantidade_check 
-CHECK (quantidade >= 0)
 ;
 
 -- Alterando os as tabelas para o criador seja meu usuario --
