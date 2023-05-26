@@ -40,9 +40,7 @@ Este é o arquivo SQL que contém o script completo. Ao baixar e executá-lo no 
 <details>
     <summary><h3>Questões<h3></summary>
 
-Criei esta seção para você, caso não queira baixar o PDF, onde é possível visualizar as perguntas e questões presentes no PSET. Abaixo, também incluirei minhas respostas na forma de fotos, caso você queira vê-las.
-
-
+Criei esta seção para você, caso não queira baixar o PDF, onde é possível visualizar as perguntas e questões presentes no PSET. 
        <h4>Perguntas</h4>
 
         ```
