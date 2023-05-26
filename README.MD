@@ -15,7 +15,7 @@ PSET (Problem Set) é um conjunto de questões desafiadoras propostas pelo profe
 - DBeaver
 
 <details>
-    <summary><h3>Pasta pest1 <h3></summary>
+    <summary><h3>Pasta Pset1 <h3></summary>
 
 Basicamente, o contém todo que foi solicitado do Professor Abrantes, que é um architect, assim como o mesmo architect, porém em formato de PDF. Em seguida, o script SQL que foi desenvolvido abaixo, conforme as instruções.
 
