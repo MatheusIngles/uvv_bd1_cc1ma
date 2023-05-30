@@ -42,11 +42,6 @@ SET role matheus;
 \c "host=localhost dbname=uvv user=matheus password=cade@osilksong"
 ;
 
--- Deletando o esquema (SCHEMA) caso ele já exista --
-
-DROP SCHEMA IF EXISTS lojas
-;
-
 -- Criando o esquema (SCHEMA), conforme solicitado pelo professor na parte 3.4.4 do PSET. --
 
 CREATE SCHEMA lojas
