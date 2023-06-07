@@ -83,7 +83,7 @@ Criei esta seção para você, caso não queira baixar o PDF, onde é possível 
 
   Pessoalmente, essa foi uma experiência nova para mim. Foi o primeiro projeto que me fez virar a noite para concluir uma questão que ocupou duas folhas. Apesar de ter sido difícil mexer no PostgreSQL no começo, depois foi basicamente uma busca detalhada na [Documentação do PostgreSQL](https://www.postgresql.org/files/documentation/pdf/15/postgresql-15-A4.pdf), tornando-me um verdadeiro detetive para descobrir que a resposta sempre esteve lá e eu estava cego e incapaz de perceber. Agradeço ao professor Abrantes pelo desafio, mas infelizmente isso acabou me atrasando em outras matérias, então vou encerrar o texto por aqui...
 
-  <h4>NOTA:</h4>
+####NOTA:
 - Discursivas: 9,5/10
 - Script: 10/10 
 - Organização do Script e Github: 10/10
